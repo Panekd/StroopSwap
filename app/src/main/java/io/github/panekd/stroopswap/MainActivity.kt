@@ -1,0 +1,35 @@
+package io.github.panekd.stroopswap
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import io.github.panekd.stroopswap.ui.App
+import io.github.panekd.stroopswap.ui.theme.Theme
+
+class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent{
+            Theme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    Surface(
+                        modifier = Modifier.fillMaxSize().padding(innerPadding),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        App()
+                    }
+                }
+            }
+        }
+    }
+
+}
