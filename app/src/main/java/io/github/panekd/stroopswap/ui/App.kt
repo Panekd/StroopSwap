@@ -9,6 +9,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -31,7 +32,7 @@ fun App() {
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.primary
+                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             ),
             title = {
                 Text("Stroop Swap")
@@ -41,7 +42,9 @@ fun App() {
         NavHost(
             navController = navController,
             startDestination = Home,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(10.dp, 10.dp)
         ) {
             composable<Home> {
                 HomeScreen(

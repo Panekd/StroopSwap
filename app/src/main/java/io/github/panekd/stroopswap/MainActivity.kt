@@ -20,14 +20,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent{
             Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Surface(
-                        modifier = Modifier.fillMaxSize().padding(innerPadding),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
-                        App()
-                    }
-                }
+                App()
             }
         }
     }

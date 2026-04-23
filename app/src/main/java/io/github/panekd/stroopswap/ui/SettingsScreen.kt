@@ -1,8 +1,11 @@
 package io.github.panekd.stroopswap.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimeInput
@@ -12,16 +15,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun SettingsScreen() {
-    Column{
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(15.dp)
+    ) {
         Text(
             "Settings",
+            modifier = Modifier.fillMaxWidth(),
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
@@ -37,7 +46,10 @@ fun DoubleTapModeSetting() {
     var checked by remember { mutableStateOf(false) }
 
     Column {
-        Row {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             Heading("Double tap mode")
             Switch(
                 checked = checked,
@@ -59,7 +71,10 @@ fun RemindersSetting() {
     )
 
     Column {
-        Row {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             Heading("Reminders")
             Switch(
                 checked = checked,
@@ -67,9 +82,11 @@ fun RemindersSetting() {
             )
         }
         Description("Get daily training reminders")
-        Row {
-            Description("At:")
-            TimeInput(state = timePickerState)
+        if (checked) {
+            Row {
+                Description("At:")
+                TimeInput(state = timePickerState)
+            }
         }
     }
 }
@@ -93,7 +110,7 @@ fun Heading(text: String) {
 fun Description(text: String) {
     Text(
         text = text,
-        fontSize = 10.sp,
-        color = Color.DarkGray
+        fontSize = 15.sp,
+        color = MaterialTheme.colorScheme.secondary
     )
 }
