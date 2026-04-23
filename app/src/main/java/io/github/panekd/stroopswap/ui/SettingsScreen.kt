@@ -37,7 +37,6 @@ fun SettingsScreen() {
         )
         DoubleTapModeSetting()
         RemindersSetting()
-        ThemeSetting()
     }
 }
 
@@ -88,13 +87,6 @@ fun RemindersSetting() {
                 TimeInput(state = timePickerState)
             }
         }
-    }
-}
-
-@Composable
-fun ThemeSetting() {
-    Column {
-        Heading("Theme")
     }
 }
 

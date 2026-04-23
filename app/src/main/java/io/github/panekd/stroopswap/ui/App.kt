@@ -20,6 +20,8 @@ object Home
 @Serializable
 object Settings
 @Serializable
+object Info
+@Serializable
 object Game
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,17 +46,20 @@ fun App() {
             startDestination = Home,
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(10.dp, 10.dp)
+                .padding(15.dp, 20.dp)
         ) {
             composable<Home> {
                 HomeScreen(
-                    onNavigateToSettings = {
-                        navController.navigate(route = Settings)
-                    }
+                    toSettings = { navController.navigate(route = Settings) },
+                    toInfo = { navController.navigate(route = Info) },
+                    toGame = { navController.navigate(route = Game) }
                 )
             }
             composable<Settings> {
                 SettingsScreen()
+            }
+            composable<Info> {
+                InfoScreen()
             }
             composable<Game> {
                 GameScreen()
