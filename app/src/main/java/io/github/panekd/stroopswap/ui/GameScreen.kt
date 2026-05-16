@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -64,7 +65,9 @@ fun GameScreen(onCorrect: () -> Unit = {}, onFail: () -> Unit = {}) {
         Text("Score: $score")
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Row {
-                Column {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
                     Text(
                         text = currentWord.name,
                         color = currentColour.color,
@@ -73,26 +76,29 @@ fun GameScreen(onCorrect: () -> Unit = {}, onFail: () -> Unit = {}) {
                     )
                     Mode(mode)
                 }
-                ColourButtons(onClick = { colour: Colours ->
-                    {
-                        if (colour == correctColour(mode, currentWord, currentColour)) {
-                            onCorrect()
-                            // change word + colour
-                            // increase score
-                        } else {
-                            onFail()
-                            // show end screen
+                ColourButtons(
+                    modifier = Modifier.weight(1f),
+                    onClick = { colour: Colours ->
+                        {
+                            if (colour == correctColour(mode, currentWord, currentColour)) {
+                                onCorrect()
+                                // change word + colour
+                                // increase score
+                            } else {
+                                onFail()
+                                // show end screen
+                            }
                         }
                     }
-                })
+                )
             }
         } else {
-            Column{
+            Column {
                 Text(
                     text = currentWord.name,
                     color = currentColour.color,
                     fontSize = 80.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Mode(mode)
                 ColourButtons(onClick = { colour: Colours ->
@@ -113,14 +119,18 @@ fun GameScreen(onCorrect: () -> Unit = {}, onFail: () -> Unit = {}) {
 }
 
 @Composable
-fun ColourButtons(onClick: (Colours) -> Unit) {
+fun ColourButtons(modifier: Modifier = Modifier, onClick: (Colours) -> Unit) {
     FlowRow (
-        modifier = Modifier.padding(4.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = modifier.padding(4.dp).fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
         maxItemsInEachRow = 2
     ) {
         Colours.entries.forEach { colour ->
-            OutlinedButton(onClick=({ onClick(colour) })) {
+            OutlinedButton(
+                modifier = Modifier.weight(1f),
+                onClick = { onClick(colour) }
+            ) {
                 Text(colour.name, color=colour.color, fontSize=25.sp)
             }
         }

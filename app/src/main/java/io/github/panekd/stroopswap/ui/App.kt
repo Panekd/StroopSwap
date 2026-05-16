@@ -1,12 +1,9 @@
 package io.github.panekd.stroopswap.ui
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -30,23 +27,10 @@ fun App() {
 
     val navController = rememberNavController()
 
-    Scaffold (topBar = {
-        TopAppBar(
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-            ),
-            title = {
-                Text("Stroop Swap")
-            }
-        )
-    }){innerPadding ->
-        NavHost(
+    NavHost(
             navController = navController,
             startDestination = Home,
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(15.dp, 20.dp)
+            modifier = Modifier.windowInsetsPadding(WindowInsets.safeContent)
         ) {
             composable<Home> {
                 HomeScreen(
@@ -66,4 +50,3 @@ fun App() {
             }
         }
     }
-}
