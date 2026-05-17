@@ -12,11 +12,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -24,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.panekd.stroopswap.R
 import io.github.panekd.stroopswap.ui.theme.Blue
 import io.github.panekd.stroopswap.ui.theme.Green
@@ -47,72 +45,48 @@ enum class Colours (val color: Color) {
 }
 
 @Composable
-fun GameScreen(onCorrect: () -> Unit = {}, onFail: () -> Unit = {}) {
+fun GameScreen() {
+    val viewModel : AppViewModel = viewModel()
+    val state by viewModel.state.collectAsState()
+
     val orientation = LocalConfiguration.current.orientation
 
-    var score by remember { mutableIntStateOf(0) }
-    var mode by remember { mutableStateOf(Modes.entries.random()) }
-    var currentWord by remember { mutableStateOf(Colours.entries.random()) }
-    var currentColour by remember { mutableStateOf(Colours.entries.random()) }
-
     Column {
-        IconButton({ pause() }) {
+        IconButton({ viewModel.pause() }) {
             Icon(
                 painter = painterResource(R.drawable.pause_24px),
                 contentDescription = "Pause button"
             )
         }
-        Text("Score: $score")
+        Text("Score: " + state.score)
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Row {
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = currentWord.name,
-                        color = currentColour.color,
+                        text = state.currentWord.name,
+                        color = state.currentColour.color,
                         fontSize = 80.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    Mode(mode)
+                    Mode(state.mode)
                 }
                 ColourButtons(
                     modifier = Modifier.weight(1f),
-                    onClick = { colour: Colours ->
-                        {
-                            if (colour == correctColour(mode, currentWord, currentColour)) {
-                                onCorrect()
-                                // change word + colour
-                                // increase score
-                            } else {
-                                onFail()
-                                // show end screen
-                            }
-                        }
-                    }
+                    onClick = { colour: Colours -> viewModel.onColourSelect(colour) }
                 )
             }
         } else {
             Column {
                 Text(
-                    text = currentWord.name,
-                    color = currentColour.color,
+                    text = state.currentWord.name,
+                    color = state.currentColour.color,
                     fontSize = 80.sp,
                     fontWeight = FontWeight.Bold,
                 )
-                Mode(mode)
-                ColourButtons(onClick = { colour: Colours ->
-                    {
-                        if (colour == correctColour(mode, currentWord, currentColour)) {
-                            onCorrect()
-                            // change word + colour
-                            // increase score
-                        } else {
-                            onFail()
-                            // show end screen
-                        }
-                    }
-                })
+                Mode(state.mode)
+                ColourButtons(onClick = { colour: Colours -> viewModel.onColourSelect(colour) })
             }
         }
     }
@@ -154,8 +128,4 @@ fun Mode(mode: Modes) {
         text = text,
         fontSize = 25.sp
     )
-}
-
-fun pause() {
-
 }
