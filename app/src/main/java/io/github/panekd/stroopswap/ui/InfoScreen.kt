@@ -11,7 +11,7 @@ import androidx.compose.ui.text.withLink
 import androidx.core.net.toUri
 
 @Composable
-fun InfoScreen() {
+fun InfoScreen(toHome: () -> Unit) {
     val context = LocalContext.current
 
     Column {

@@ -40,13 +40,19 @@ fun App() {
                 )
             }
             composable<Settings> {
-                SettingsScreen()
+                SettingsScreen(
+                    toHome = { navController.navigate(route = Home) }
+                )
             }
             composable<Info> {
-                InfoScreen()
+                InfoScreen(
+                    toHome = { navController.navigate(route = Home) }
+                )
             }
             composable<Game> {
-                GameScreen()
+                GameScreen(
+                    toHome = { navController.navigate(route = Home) }
+                )
             }
         }
     }

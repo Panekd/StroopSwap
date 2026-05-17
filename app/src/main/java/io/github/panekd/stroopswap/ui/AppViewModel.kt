@@ -1,7 +1,5 @@
 package io.github.panekd.stroopswap.ui
 
-import android.content.Context
-import android.app.Application
 import android.os.SystemClock
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,7 +47,7 @@ class AppViewModel() : ViewModel() {
                 pausedDuration
     }
 
-    private fun startQuestion() {
+    internal fun startQuestion() {
         questionStartTime = SystemClock.elapsedRealtime()
         pausedDuration = 0L
 

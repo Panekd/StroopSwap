@@ -1,12 +1,16 @@
 package io.github.panekd.stroopswap.ui
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
@@ -14,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -45,49 +50,20 @@ enum class Colours (val color: Color) {
 }
 
 @Composable
-fun GameScreen() {
+fun GameScreen(toHome: () -> Unit) {
     val viewModel : AppViewModel = viewModel()
     val state by viewModel.state.collectAsState()
 
-    val orientation = LocalConfiguration.current.orientation
+    if (state.paused) {
+        PauseMenu({viewModel.resume()}, toHome)
+    } else {
+        when (state.screen) {
+            GameScreenState.Question -> Question(state, {viewModel.pause()},
+                { colour: Colours -> viewModel.onColourSelect(colour) })
+            GameScreenState.ModeChange -> ModeChange(state.mode
+            ) { viewModel.startQuestion() }
 
-    Column {
-        IconButton({ viewModel.pause() }) {
-            Icon(
-                painter = painterResource(R.drawable.pause_24px),
-                contentDescription = "Pause button"
-            )
-        }
-        Text("Score: " + state.score)
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Row {
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = state.currentWord.name,
-                        color = state.currentColour.color,
-                        fontSize = 80.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Mode(state.mode)
-                }
-                ColourButtons(
-                    modifier = Modifier.weight(1f),
-                    onClick = { colour: Colours -> viewModel.onColourSelect(colour) }
-                )
-            }
-        } else {
-            Column {
-                Text(
-                    text = state.currentWord.name,
-                    color = state.currentColour.color,
-                    fontSize = 80.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-                Mode(state.mode)
-                ColourButtons(onClick = { colour: Colours -> viewModel.onColourSelect(colour) })
-            }
+            GameScreenState.GameOver -> GameOver(state.score, toHome)
         }
     }
 }
@@ -128,4 +104,88 @@ fun Mode(mode: Modes) {
         text = text,
         fontSize = 25.sp
     )
+}
+
+@Composable
+fun PauseMenu(resume: () -> Unit, toHome: () -> Unit) {
+    Column{
+        Button(onClick = resume) {
+            Text("Resume")
+        }
+        Button(onClick = toHome) {
+            Text("Quit")
+        }
+    }
+}
+
+@Composable
+fun ModeChange(newMode: Modes, onContinue: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable { onContinue() },
+        contentAlignment = Alignment.Center
+    ) {
+        Column {
+            Text("New mode:")
+            Text(newMode.toString())
+        }
+    }
+}
+
+@Composable
+fun GameOver(score: Int, toHome: () -> Unit) {
+    Column {
+        Text("Game over")
+        Text("Your score:")
+        Text(score.toString())
+        Button(toHome) {
+            Text("Return to Menu")
+        }
+    }
+}
+
+@Composable
+fun Question(state: GameState, pause: () -> Unit, onColourSelect: (Colours) -> Unit) {
+    val orientation = LocalConfiguration.current.orientation
+
+    Column {
+        IconButton(pause) {
+            Icon(
+                painter = painterResource(R.drawable.pause_24px),
+                contentDescription = "Pause button"
+            )
+        }
+        Text("Score: " + state.score)
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Row {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = state.currentWord.name,
+                        color = state.currentColour.color,
+                        fontSize = 80.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Mode(state.mode)
+                }
+                ColourButtons(
+                    modifier = Modifier.weight(1f),
+                    onClick = { colour: Colours -> onColourSelect(colour) }
+                )
+            }
+        } else {
+            Column {
+                Text(
+                    text = state.currentWord.name,
+                    color = state.currentColour.color,
+                    fontSize = 80.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                Mode(state.mode)
+                ColourButtons(onClick = { colour: Colours -> onColourSelect(colour) })
+            }
+        }
+    }
 }
