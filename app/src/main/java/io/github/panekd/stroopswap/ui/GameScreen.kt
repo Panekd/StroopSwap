@@ -87,7 +87,7 @@ fun GameScreen(toHome: () -> Unit) {
                 .windowInsetsPadding(WindowInsets.safeDrawing)
         ) {
             if (state.paused) {
-                PauseMenu({ viewModel.resume() }, toHome)
+                PauseMenu(state.score, { viewModel.resume() }, toHome)
             } else {
                 when (state.screen) {
                     GameScreenState.Question -> Question(
@@ -169,8 +169,14 @@ fun Mode(mode: Modes) {
 }
 
 @Composable
-fun PauseMenu(resume: () -> Unit, toHome: () -> Unit) {
-    Column{
+fun PauseMenu(score: Int, resume: () -> Unit, toHome: () -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Text("Game paused")
+        Text("Current score: $score")
         Button(onClick = resume) {
             Text("Resume")
         }
@@ -188,7 +194,9 @@ fun ModeChange(newMode: Modes, onContinue: () -> Unit) {
             .clickable { onContinue() },
         contentAlignment = Alignment.Center
     ) {
-        Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text("New mode:")
             Text(newMode.toString())
         }
@@ -197,10 +205,13 @@ fun ModeChange(newMode: Modes, onContinue: () -> Unit) {
 
 @Composable
 fun GameOver(score: Int, toHome: () -> Unit) {
-    Column {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text("Game over")
-        Text("Your score:")
-        Text(score.toString())
+        Text("Your score: $score")
         Button(toHome) {
             Text("Return to Menu")
         }
