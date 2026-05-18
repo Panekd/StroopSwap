@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.panekd.stroopswap.R
 import io.github.panekd.stroopswap.ui.theme.Blue
@@ -62,21 +62,21 @@ enum class Colours (val color: Color) {
 
 @Composable
 fun GameScreen(toHome: () -> Unit) {
-    val lifecycleOwner = LocalLifecycleOwner.current
     val viewModel : GameViewModel = viewModel()
     val state by viewModel.state.collectAsState()
 
-    DisposableEffect(lifecycleOwner) {
+    // Pause when exit app
+    DisposableEffect(Unit) {
         val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_PAUSE) {
+            if (event == Lifecycle.Event.ON_STOP) {
                 viewModel.pause()
             }
         }
 
-        lifecycleOwner.lifecycle.addObserver(observer)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(observer)
 
         onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
+            ProcessLifecycleOwner.get().lifecycle.removeObserver(observer)
         }
     }
 
