@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -171,7 +172,7 @@ fun Mode(mode: Modes) {
 @Composable
 fun PauseMenu(score: Int, resume: () -> Unit, toHome: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
@@ -205,6 +206,7 @@ fun ModeChange(newMode: Modes, onContinue: () -> Unit) {
 
 @Composable
 fun GameOver(score: Int, toHome: () -> Unit) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -215,6 +217,9 @@ fun GameOver(score: Int, toHome: () -> Unit) {
         Button(toHome) {
             Text("Return to Menu")
         }
+        Button({shareScore(context, score)}) {
+            Text("Share score")
+        }
     }
 }
 
@@ -222,43 +227,57 @@ fun GameOver(score: Int, toHome: () -> Unit) {
 fun Question(state: GameState, pause: () -> Unit, onColourSelect: (Colours) -> Unit) {
     val orientation = LocalConfiguration.current.orientation
 
-    Column {
-        IconButton(pause) {
-            Icon(
-                painter = painterResource(R.drawable.pause_24px),
-                contentDescription = "Pause button"
-            )
-        }
-        Text("Score: " + state.score)
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Row {
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = state.currentWord.name,
-                        color = state.currentColour.color,
-                        fontSize = 80.sp,
-                        fontWeight = FontWeight.Bold
+    @Composable
+    fun QuestionBox(modifier: Modifier = Modifier) {
+        Box(modifier = modifier) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(pause) {
+                    Icon(
+                        painter = painterResource(R.drawable.pause_24px),
+                        contentDescription = "Pause button"
                     )
-                    Mode(state.mode)
                 }
-                ColourButtons(
-                    modifier = Modifier.weight(1f),
-                    onClick = { colour: Colours -> onColourSelect(colour) }
-                )
+                Text("Score: " + state.score)
             }
-        } else {
-            Column {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .align(Alignment.Center),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = state.currentWord.name,
                     color = state.currentColour.color,
                     fontSize = 80.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Bold
                 )
                 Mode(state.mode)
-                ColourButtons(onClick = { colour: Colours -> onColourSelect(colour) })
             }
+        }
+    }
+
+    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        Row {
+            QuestionBox(modifier = Modifier.weight(1f))
+            ColourButtons(
+                    modifier = Modifier
+                        .weight(1f)
+                        .align(Alignment.CenterVertically),
+                    onClick = { colour: Colours -> onColourSelect(colour) }
+                )
+        }
+    } else {
+        Column {
+            QuestionBox(modifier = Modifier.weight(1f))
+            ColourButtons(
+                modifier = Modifier
+                    .weight(1f),
+                onClick = { colour: Colours -> onColourSelect(colour) }
+            )
         }
     }
 }
