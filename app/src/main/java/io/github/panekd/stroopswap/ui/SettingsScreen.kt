@@ -64,7 +64,8 @@ fun SettingsScreen(toHome: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .padding(16.dp, 16.dp),
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             DoubleTapModeSetting(model, settings!!)
@@ -117,7 +118,9 @@ fun RemindersSetting(model: SettingsViewModel, settings: Settings) {
         }
         Description("Get daily training reminders")
         if (settings.reminders) {
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Description("At:")
                 Button(onClick = {showTimePicker = true}) {
                     Text(String.format(
