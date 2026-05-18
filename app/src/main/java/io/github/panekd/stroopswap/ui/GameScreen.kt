@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -114,35 +116,37 @@ fun ColourButtons(modifier: Modifier = Modifier, onClick: (Colours) -> Unit) {
     if (settings == null) return
 
     FlowRow (
-        modifier = modifier.padding(4.dp).fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = modifier.padding(16.dp).fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         maxItemsInEachRow = 2
     ) {
         Colours.entries.forEach { colour ->
-            val modifier = Modifier
-                .weight(1f)
-                .then(
-                    if (settings!!.doubleTap) {
-                        Modifier.combinedClickable(
-                            onClick = {},
-                            onDoubleClick = { onClick(colour) }
-                        )
-                    } else {
-                        Modifier.clickable { onClick(colour) }
-                    }
-                )
 
             Surface(
-                modifier = modifier,
+                modifier = Modifier
+                    .weight(1f)
+                    .then(
+                        if (settings!!.doubleTap) {
+                            Modifier.combinedClickable(
+                                onClick = {},
+                                onDoubleClick = { onClick(colour) }
+                            )
+                        } else {
+                            Modifier.clickable { onClick(colour) }
+                        }
+                    ),
                 shape = RoundedCornerShape(8.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant
             ) {
-                Box(modifier = Modifier.padding(12.dp)) {
+                Box(modifier = Modifier.padding(16.dp)) {
                     Text(
                         text = colour.name,
+                        modifier = Modifier.align(Alignment.Center),
                         color = colour.color,
-                        fontSize = 25.sp
+                        fontSize = 25.sp,
+                        softWrap = false,
+                        maxLines = 1
                     )
                 }
             }
@@ -178,11 +182,15 @@ fun PauseMenu(score: Int, resume: () -> Unit, toHome: () -> Unit) {
     ){
         Text("Game paused")
         Text("Current score: $score")
-        Button(onClick = resume) {
-            Text("Resume")
-        }
-        Button(onClick = toHome) {
-            Text("Quit")
+        Column(
+            modifier = Modifier.width(IntrinsicSize.Max)
+        ) {
+            Button(onClick = resume, modifier = Modifier.fillMaxWidth()) {
+                Text("Resume")
+            }
+            Button(onClick = toHome, modifier = Modifier.fillMaxWidth()) {
+                Text("Quit")
+            }
         }
     }
 }
@@ -214,11 +222,21 @@ fun GameOver(score: Int, toHome: () -> Unit) {
     ) {
         Text("Game over")
         Text("Your score: $score")
-        Button(toHome) {
-            Text("Return to Menu")
-        }
-        Button({shareScore(context, score)}) {
-            Text("Share score")
+        Column(
+            modifier = Modifier.width(IntrinsicSize.Max)
+        ) {
+            Button(
+                toHome,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Return to Menu")
+            }
+            Button(
+                { shareScore(context, score) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Share score")
+            }
         }
     }
 }
@@ -253,7 +271,9 @@ fun Question(state: GameState, pause: () -> Unit, onColourSelect: (Colours) -> U
                     text = state.currentWord.name,
                     color = state.currentColour.color,
                     fontSize = 80.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    softWrap = false,
+                    maxLines = 1
                 )
                 Mode(state.mode)
             }
@@ -267,7 +287,7 @@ fun Question(state: GameState, pause: () -> Unit, onColourSelect: (Colours) -> U
                     modifier = Modifier
                         .weight(1f)
                         .align(Alignment.CenterVertically),
-                    onClick = { colour: Colours -> onColourSelect(colour) }
+                    onClick = onColourSelect
                 )
         }
     } else {
@@ -275,8 +295,8 @@ fun Question(state: GameState, pause: () -> Unit, onColourSelect: (Colours) -> U
             QuestionBox(modifier = Modifier.weight(1f))
             ColourButtons(
                 modifier = Modifier
-                    .weight(1f),
-                onClick = { colour: Colours -> onColourSelect(colour) }
+                    .weight(1.5f),
+                onClick = onColourSelect
             )
         }
     }
