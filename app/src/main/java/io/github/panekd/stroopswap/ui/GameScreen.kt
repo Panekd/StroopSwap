@@ -2,6 +2,7 @@ package io.github.panekd.stroopswap.ui
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,15 +14,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +34,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.panekd.stroopswap.R
 import io.github.panekd.stroopswap.ui.theme.Blue
@@ -55,8 +62,23 @@ enum class Colours (val color: Color) {
 
 @Composable
 fun GameScreen(toHome: () -> Unit) {
+    val lifecycleOwner = LocalLifecycleOwner.current
     val viewModel : GameViewModel = viewModel()
     val state by viewModel.state.collectAsState()
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_PAUSE) {
+                viewModel.pause()
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     Surface {
         Box (
@@ -85,6 +107,11 @@ fun GameScreen(toHome: () -> Unit) {
 
 @Composable
 fun ColourButtons(modifier: Modifier = Modifier, onClick: (Colours) -> Unit) {
+    val settingsViewModel : SettingsViewModel = viewModel()
+    val settings by settingsViewModel.settings.observeAsState()
+
+    if (settings == null) return
+
     FlowRow (
         modifier = modifier.padding(4.dp).fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -92,11 +119,31 @@ fun ColourButtons(modifier: Modifier = Modifier, onClick: (Colours) -> Unit) {
         maxItemsInEachRow = 2
     ) {
         Colours.entries.forEach { colour ->
-            OutlinedButton(
-                modifier = Modifier.weight(1f),
-                onClick = { onClick(colour) }
+            val modifier = Modifier
+                .weight(1f)
+                .then(
+                    if (settings!!.doubleTap) {
+                        Modifier.combinedClickable(
+                            onClick = {},
+                            onDoubleClick = { onClick(colour) }
+                        )
+                    } else {
+                        Modifier.clickable { onClick(colour) }
+                    }
+                )
+
+            Surface(
+                modifier = modifier,
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant
             ) {
-                Text(colour.name, color=colour.color, fontSize=25.sp)
+                Box(modifier = Modifier.padding(12.dp)) {
+                    Text(
+                        text = colour.name,
+                        color = colour.color,
+                        fontSize = 25.sp
+                    )
+                }
             }
         }
     }
