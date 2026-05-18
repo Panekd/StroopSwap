@@ -12,6 +12,8 @@ navigationCompose = "2.9.7"
 material = "1.13.0"
 datastorePrefs = "1.0.0"
 lifecycleViewmodelKtx = "2.10.0"
+runtimeLivedata = "1.10.4"
+lifecycleLivedata = "Function…"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,6 +35,8 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 android-material = { group = "com.google.android.material", name = "material", version.ref = "material"}
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePrefs"}
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+androidx-lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedata"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

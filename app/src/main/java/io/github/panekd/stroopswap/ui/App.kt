@@ -12,13 +12,13 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.serialization.Serializable
 
 @Serializable
-object Home
+private object Home
 @Serializable
-object Settings
+private object Settings
 @Serializable
-object Info
+private object Info
 @Serializable
-object Game
+private object Game
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

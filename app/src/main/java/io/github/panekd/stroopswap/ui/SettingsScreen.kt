@@ -15,7 +15,7 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -26,11 +26,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.panekd.stroopswap.notifications.DailyAlarmManager
 import java.util.Locale
+import io.github.panekd.stroopswap.data.Settings
 
 @Composable
 fun SettingsScreen(toHome: () -> Unit) {
+    val model: SettingsViewModel = viewModel()
+    val settings by model.settings.observeAsState()
+
+    if (settings == null) return
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(15.dp)
@@ -42,15 +49,13 @@ fun SettingsScreen(toHome: () -> Unit) {
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
-        DoubleTapModeSetting()
-        RemindersSetting()
+        DoubleTapModeSetting(model, settings!!)
+        RemindersSetting(model, settings!!)
     }
 }
 
 @Composable
-fun DoubleTapModeSetting() {
-    var checked by remember { mutableStateOf(false) }
-
+fun DoubleTapModeSetting(model: SettingsViewModel, settings: Settings) {
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -58,8 +63,10 @@ fun DoubleTapModeSetting() {
         ) {
             Heading("Double tap mode")
             Switch(
-                checked = checked,
-                onCheckedChange = { checked = it }
+                checked = settings.doubleTap,
+                onCheckedChange = {
+                    model.saveSettings(settings.copy(doubleTap = it))
+                }
             )
         }
         Description("Require a double tap to confirm answer to prevent accidental inputs.")
@@ -68,13 +75,9 @@ fun DoubleTapModeSetting() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RemindersSetting() {
+fun RemindersSetting(model: SettingsViewModel, settings: Settings) {
     val context = LocalContext.current
 
-    var hour by remember { mutableIntStateOf(17) }
-    var minute by remember { mutableIntStateOf(0) }
-
-    var checked by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
     val state = rememberTimePickerState(
         initialHour = 17,
@@ -89,16 +92,23 @@ fun RemindersSetting() {
         ) {
             Heading("Reminders")
             Switch(
-                checked = checked,
-                onCheckedChange = { checked = it }
+                checked = settings.reminders,
+                onCheckedChange = {
+                    model.saveSettings(settings.copy(reminders = it))
+                }
             )
         }
         Description("Get daily training reminders")
-        if (checked) {
+        if (settings.reminders) {
             Row {
                 Description("At:")
                 Button(onClick = {showTimePicker = true}) {
-                    Text(String.format(Locale.UK, "%02d:%02d", hour, minute))
+                    Text(String.format(
+                        Locale.UK,
+                        "%02d:%02d",
+                        settings.remindersHour,
+                        settings.remindersMinute
+                    ))
                 }
             }
         }
@@ -106,9 +116,11 @@ fun RemindersSetting() {
             TimePickerDialog(
                 onCancel = { showTimePicker = false },
                 onConfirm = {
-                    hour = state.hour
-                    minute = state.minute
-                    DailyAlarmManager(context).set(hour, minute)
+                    model.saveSettings(settings.copy(
+                        remindersHour = state.hour,
+                        remindersMinute = state.minute
+                    ))
+                    DailyAlarmManager(context).set(settings.remindersHour, settings.remindersMinute)
                     showTimePicker = false
                 }
             ) {
