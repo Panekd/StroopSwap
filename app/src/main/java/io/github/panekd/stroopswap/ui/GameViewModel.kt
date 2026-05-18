@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.random.Random
 
-class AppViewModel() : ViewModel() {
+class GameViewModel() : ViewModel() {
     private val _state = MutableStateFlow(
         GameState(
             mode = Modes.entries.random(),

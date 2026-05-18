@@ -7,13 +7,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -51,19 +55,30 @@ enum class Colours (val color: Color) {
 
 @Composable
 fun GameScreen(toHome: () -> Unit) {
-    val viewModel : AppViewModel = viewModel()
+    val viewModel : GameViewModel = viewModel()
     val state by viewModel.state.collectAsState()
 
-    if (state.paused) {
-        PauseMenu({viewModel.resume()}, toHome)
-    } else {
-        when (state.screen) {
-            GameScreenState.Question -> Question(state, {viewModel.pause()},
-                { colour: Colours -> viewModel.onColourSelect(colour) })
-            GameScreenState.ModeChange -> ModeChange(state.mode
-            ) { viewModel.startQuestion() }
+    Surface {
+        Box (
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.safeDrawing)
+        ) {
+            if (state.paused) {
+                PauseMenu({ viewModel.resume() }, toHome)
+            } else {
+                when (state.screen) {
+                    GameScreenState.Question -> Question(
+                        state, { viewModel.pause() },
+                        { colour: Colours -> viewModel.onColourSelect(colour) })
 
-            GameScreenState.GameOver -> GameOver(state.score, toHome)
+                    GameScreenState.ModeChange -> ModeChange(
+                        state.mode
+                    ) { viewModel.startQuestion() }
+
+                    GameScreenState.GameOver -> GameOver(state.score, toHome)
+                }
+            }
         }
     }
 }
