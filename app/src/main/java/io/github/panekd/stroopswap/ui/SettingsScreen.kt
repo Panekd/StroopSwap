@@ -4,15 +4,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -21,16 +28,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.panekd.stroopswap.notifications.DailyAlarmManager
 import java.util.Locale
 import io.github.panekd.stroopswap.data.Settings
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeDrawing
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(toHome: () -> Unit) {
     val model: SettingsViewModel = viewModel()
@@ -38,19 +46,32 @@ fun SettingsScreen(toHome: () -> Unit) {
 
     if (settings == null) return
 
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(15.dp)
-    ) {
-        Text(
-            "Settings",
-            modifier = Modifier.fillMaxWidth(),
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
-        )
-        DoubleTapModeSetting(model, settings!!)
-        RemindersSetting(model, settings!!)
+    Scaffold(
+        contentWindowInsets = WindowInsets.safeDrawing,
+        topBar = {
+            TopAppBar(
+                title = { Text("Settings") },
+                navigationIcon = {
+                    IconButton(
+                        onClick = toHome
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back to menu")
+                    }
+                }
+            )
+        }
+    ) {innerPadding ->
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(15.dp)
+        ) {
+            DoubleTapModeSetting(model, settings!!)
+            RemindersSetting(model, settings!!)
+        }
     }
 }
 
@@ -76,12 +97,10 @@ fun DoubleTapModeSetting(model: SettingsViewModel, settings: Settings) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RemindersSetting(model: SettingsViewModel, settings: Settings) {
-    val context = LocalContext.current
-
     var showTimePicker by remember { mutableStateOf(false) }
     val state = rememberTimePickerState(
-        initialHour = 17,
-        initialMinute = 0,
+        initialHour = settings.remindersHour,
+        initialMinute = settings.remindersMinute,
         is24Hour = true
     )
 
@@ -120,7 +139,6 @@ fun RemindersSetting(model: SettingsViewModel, settings: Settings) {
                         remindersHour = state.hour,
                         remindersMinute = state.minute
                     ))
-                    DailyAlarmManager(context).set(settings.remindersHour, settings.remindersMinute)
                     showTimePicker = false
                 }
             ) {

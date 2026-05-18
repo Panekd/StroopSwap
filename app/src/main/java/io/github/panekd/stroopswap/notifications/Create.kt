@@ -10,9 +10,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
+import io.github.panekd.stroopswap.data.SettingsManager
+import kotlinx.coroutines.flow.first
 import java.util.Calendar
 
 class DailyAlarmManager(private val context: Context) {
+    private val settingsManager = SettingsManager(context)
 
     private val alarmManager =
         context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -30,7 +33,13 @@ class DailyAlarmManager(private val context: Context) {
         )
     }
 
-    fun set(hour: Int, minute: Int) {
+    suspend fun set() {
+
+        val settings = settingsManager.settingsFlow.first()
+
+        val hour = settings.remindersHour
+        val minute = settings.remindersMinute
+
         val calendar = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, hour)
             set(Calendar.MINUTE, minute)

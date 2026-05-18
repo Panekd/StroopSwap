@@ -14,8 +14,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.CATEGORY_REMINDER
 import androidx.core.app.NotificationManagerCompat
 import io.github.panekd.stroopswap.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class AlarmReceiver : BroadcastReceiver() {
+class AlarmReceiver() : BroadcastReceiver() {
 
     companion object {
         const val CHANNEL_ID = "daily_reminder"
@@ -42,7 +45,15 @@ class AlarmReceiver : BroadcastReceiver() {
                 .notify(2, builder.build())
         }
 
-        DailyAlarmManager(context).set(12, 29)
+        val pendingResult = goAsync()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                DailyAlarmManager(context).set()
+            } finally {
+                pendingResult.finish()
+            }
+        }
     }
 
     private fun createNotificationChannel(context: Context) {

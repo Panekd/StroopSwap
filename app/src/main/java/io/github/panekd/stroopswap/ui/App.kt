@@ -23,13 +23,11 @@ private object Game
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
-
     val navController = rememberNavController()
 
     NavHost(
             navController = navController,
-            startDestination = Home,
-            modifier = Modifier.windowInsetsPadding(WindowInsets.safeContent)
+            startDestination = Home
         ) {
             composable<Home> {
                 HomeScreen(
