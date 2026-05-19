@@ -1,5 +1,10 @@
 package io.github.panekd.stroopswap.ui
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,7 +40,9 @@ import java.util.Locale
 import io.github.panekd.stroopswap.data.Settings
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.ContextCompat
 import io.github.panekd.stroopswap.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -98,12 +105,20 @@ fun DoubleTapModeSetting(model: SettingsViewModel, settings: Settings) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RemindersSetting(model: SettingsViewModel, settings: Settings) {
+    val context = LocalContext.current
+
     var showTimePicker by remember { mutableStateOf(false) }
     val state = rememberTimePickerState(
         initialHour = settings.remindersHour,
         initialMinute = settings.remindersMinute,
         is24Hour = true
     )
+
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        model.saveSettings(settings.copy(reminders = granted))
+    }
 
     Column {
         Row(
@@ -114,7 +129,20 @@ fun RemindersSetting(model: SettingsViewModel, settings: Settings) {
             Switch(
                 checked = settings.reminders,
                 onCheckedChange = {
-                    model.saveSettings(settings.copy(reminders = it))
+                    if (!it) model.saveSettings(settings.copy(reminders = false))
+                    else {
+                        if (
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                            ContextCompat.checkSelfPermission(
+                                context,
+                                Manifest.permission.POST_NOTIFICATIONS
+                            ) != PackageManager.PERMISSION_GRANTED
+                        ) {
+                            launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        } else {
+                            model.saveSettings(settings.copy(reminders = true))
+                        }
+                    }
                 }
             )
         }
