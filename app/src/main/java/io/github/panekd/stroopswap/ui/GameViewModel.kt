@@ -39,6 +39,17 @@ class GameViewModel() : ViewModel() {
         }
     }
 
+    fun restart() {
+        _state.value = GameState(
+            score = 0,
+            mode = Modes.entries.random(),
+            currentWord = Colours.entries.random(),
+            currentColour = Colours.entries.random(),
+            screen = GameScreenState.Question,
+            paused = false
+        )
+    }
+
     private fun currentQuestionTime(): Long {
         return SystemClock.elapsedRealtime() -
                 questionStartTime -

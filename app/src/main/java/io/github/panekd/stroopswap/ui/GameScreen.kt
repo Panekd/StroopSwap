@@ -103,7 +103,10 @@ fun GameScreen(toHome: () -> Unit) {
                         state.mode
                     ) { viewModel.startQuestion() }
 
-                    GameScreenState.GameOver -> GameOver(state.score, toHome)
+                    GameScreenState.GameOver ->
+                        GameOver(state.score,
+                            { viewModel.restart() },
+                            toHome)
                 }
             }
         }
@@ -219,7 +222,7 @@ fun ModeChange(newMode: Modes, onContinue: () -> Unit) {
 }
 
 @Composable
-fun GameOver(score: Int, toHome: () -> Unit) {
+fun GameOver(score: Int, tryAgain: () -> Unit, toHome: () -> Unit) {
     val context = LocalContext.current
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -233,6 +236,12 @@ fun GameOver(score: Int, toHome: () -> Unit) {
         Column(
             modifier = Modifier.width(IntrinsicSize.Max)
         ) {
+            Button(
+                tryAgain,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.try_again))
+            }
             Button(
                 toHome,
                 modifier = Modifier.fillMaxWidth()
