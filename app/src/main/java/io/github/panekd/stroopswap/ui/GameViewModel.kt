@@ -21,8 +21,6 @@ class GameViewModel() : ViewModel() {
     private var pauseStartTime = 0L
     private var pausedDuration = 0L
 
-    init {}
-
     fun pause() {
         if (_state.value.paused) return
 
@@ -72,7 +70,7 @@ class GameViewModel() : ViewModel() {
 
             _state.update {
                 it.copy(
-                    score = it.score + (100000 / currentQuestionTime()).toInt(),
+                    score = it.score + (2000 / currentQuestionTime()).toInt(),
                     mode = nextMode,
                     screen =
                         if (nextMode != current.mode)
