@@ -35,6 +35,8 @@ import java.util.Locale
 import io.github.panekd.stroopswap.data.Settings
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.ui.res.stringResource
+import io.github.panekd.stroopswap.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,13 +50,13 @@ fun SettingsScreen(toHome: () -> Unit) {
         contentWindowInsets = WindowInsets.safeDrawing,
         topBar = {
             TopAppBar(
-                title = { Text("Settings") },
+                title = { Text(stringResource(R.string.settings)) },
                 navigationIcon = {
                     IconButton(
                         onClick = toHome
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back to menu")
+                            stringResource(R.string.to_menu))
                     }
                 }
             )
@@ -81,7 +83,7 @@ fun DoubleTapModeSetting(model: SettingsViewModel, settings: Settings) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Heading("Double tap mode")
+            Heading(stringResource(R.string.double_tap_mode))
             Switch(
                 checked = settings.doubleTap,
                 onCheckedChange = {
@@ -89,7 +91,7 @@ fun DoubleTapModeSetting(model: SettingsViewModel, settings: Settings) {
                 }
             )
         }
-        Description("Require a double tap to confirm answer to prevent accidental inputs.")
+        Description(stringResource(R.string.double_tap_mode_desc))
     }
 }
 
@@ -108,7 +110,7 @@ fun RemindersSetting(model: SettingsViewModel, settings: Settings) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Heading("Reminders")
+            Heading(stringResource(R.string.reminders))
             Switch(
                 checked = settings.reminders,
                 onCheckedChange = {
@@ -116,16 +118,16 @@ fun RemindersSetting(model: SettingsViewModel, settings: Settings) {
                 }
             )
         }
-        Description("Get daily training reminders")
+        Description(stringResource(R.string.reminders_desc))
         if (settings.reminders) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Description("At:")
+                Description(stringResource(R.string.reminders_at))
                 Button(onClick = {showTimePicker = true}) {
                     Text(String.format(
                         Locale.UK,
-                        "%02d:%02d",
+                        stringResource(R.string.time_format),
                         settings.remindersHour,
                         settings.remindersMinute
                     ))
@@ -159,12 +161,12 @@ fun TimePickerDialog(
         onDismissRequest = onCancel,
         dismissButton = {
             TextButton(onClick = { onCancel() }) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         },
         confirmButton = {
             TextButton(onClick = { onConfirm() }) {
-                Text("OK")
+                Text(stringResource(R.string.ok))
             }
         },
         text = { content() }

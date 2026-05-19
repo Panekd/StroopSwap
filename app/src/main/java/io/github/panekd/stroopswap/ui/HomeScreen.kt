@@ -18,6 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import io.github.panekd.stroopswap.R
+import java.util.Locale
+
+const val HIGH_SCORE = 213
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,17 +29,19 @@ fun HomeScreen(toSettings: () -> Unit, toInfo: () -> Unit, toGame: () -> Unit) {
         contentWindowInsets = WindowInsets.safeDrawing,
         topBar = {
             TopAppBar(
-                title = { Text("") },
+                title = {},
                 actions = {
                     IconButton(
                         onClick = toSettings
                     ) {
-                        Icon(Icons.Outlined.Settings, contentDescription = "Settings")
+                        Icon(Icons.Outlined.Settings,
+                            stringResource(R.string.settings))
                     }
                     IconButton(
                         onClick = toInfo
                     ) {
-                        Icon(Icons.Outlined.Info, contentDescription = "Information")
+                        Icon(Icons.Outlined.Info,
+                            stringResource(R.string.information))
                     }
                 }
             )
@@ -46,8 +51,13 @@ fun HomeScreen(toSettings: () -> Unit, toInfo: () -> Unit, toGame: () -> Unit) {
             modifier = Modifier.padding(innerPadding)
         ) {
             Text(stringResource(R.string.app_name))
-            Button(onClick = { toGame() }) { Text("Play") }
-            Text("High score: XXX")
+            Button(onClick = { toGame() }) {
+                Text(stringResource(R.string.play))
+            }
+            Text(String.format(
+                Locale.UK,
+                stringResource(R.string.high_score),
+                HIGH_SCORE))
         }
     }
 }

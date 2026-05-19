@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -42,14 +43,14 @@ fun InfoScreen(toHome: () -> Unit) {
         contentWindowInsets = WindowInsets.safeDrawing,
         topBar = {
             TopAppBar(
-                title = { Text("Info") },
+                title = { Text(stringResource(R.string.information)) },
                 navigationIcon = {
                     IconButton(
                         onClick = toHome
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back to menu"
+                            stringResource(R.string.to_menu)
                         )
                     }
                 }
@@ -64,11 +65,8 @@ fun InfoScreen(toHome: () -> Unit) {
                 .padding(16.dp, 16.dp)
                 .verticalScroll(scrollState, true),
         ) {
-            Heading("What is the Stroop test?")
-            Text("The Stroop test is a test of selective attention. " +
-                "Traditionally, subjects are shown a colour word written in" +
-                " a different colour font, and must respond with the colour" +
-                " of the font.")
+            Heading(stringResource(R.string.what_is_it))
+            Text(stringResource(R.string.what_is_it_description))
             Text(
                 buildAnnotatedString {
                     withLink(
@@ -88,27 +86,23 @@ fun InfoScreen(toHome: () -> Unit) {
                                 textDecoration = TextDecoration.Underline
                             )
                         ) {
-                            append("Read more about the Stroop effect on Wikipedia")
+                            append(stringResource(R.string.wikilink))
                         }
                     }
                 }
             )
-            Heading("How to Play")
-            Text("Stroop Swap has two modes.")
-            Text("The first mode, Colour Mode, is like the traditional" +
-                " Stroop test. You should select the colour of the font.")
-            Text("Here's an example:")
+            Heading(stringResource(R.string.how_to_play))
+            Text(stringResource(R.string.two_modes))
+            Text(stringResource(R.string.colour_mode_info))
+            Text(stringResource(R.string.example))
             Image(painterResource(R.drawable.colour_mode_info),
-                "In colour mode, given the word RED in blue text, you should choose blue")
-            Text("The other mode, Colour Mode, is the opposite. You " +
-                    "should select the colour that corresponds to the meaning" +
-                    " of the word.")
-            Text("Here's an example:")
+                stringResource(R.string.colour_mode_img_desc))
+            Text(stringResource(R.string.word_mode_info))
+            Text(stringResource(R.string.example))
             Image(painterResource(R.drawable.word_mode_info),
-                "In word mode, given the word BLUE in red text, you should choose red")
-            Text("The game will switch between the two modes at random." +
-                    " Your goal is to last as long as possible while answering" +
-                    " as quickly as possible. Good luck!")
+                stringResource(R.string.word_mode_img_desc))
+            Text(stringResource(R.string.mode_change_info))
+            Text(stringResource(R.string.info_end))
         }
     }
 }

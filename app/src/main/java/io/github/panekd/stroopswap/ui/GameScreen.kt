@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,6 +49,7 @@ import io.github.panekd.stroopswap.ui.theme.Orange
 import io.github.panekd.stroopswap.ui.theme.Purple
 import io.github.panekd.stroopswap.ui.theme.Red
 import io.github.panekd.stroopswap.ui.theme.Yellow
+import java.util.Locale
 
 enum class Modes {
     Colour,
@@ -164,9 +166,10 @@ fun correctColour(mode: Modes, currentWord:Colours, currentColour: Colours): Col
 @Composable
 fun Mode(mode: Modes) {
     val text = when (mode) {
-        Modes.Colour -> "COLOUR MODE"
-        Modes.Word -> "WORD MODE"
+        Modes.Colour -> stringResource(R.string.colour_mode)
+        Modes.Word -> stringResource(R.string.word_mode)
     }
+
     Text(
         text = text,
         fontSize = 25.sp
@@ -180,16 +183,19 @@ fun PauseMenu(score: Int, resume: () -> Unit, toHome: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text("Game paused")
-        Text("Current score: $score")
+        Text(stringResource(R.string.paused))
+        Text(String.format(
+            Locale.UK,
+            stringResource(R.string.show_score),
+            score))
         Column(
             modifier = Modifier.width(IntrinsicSize.Max)
         ) {
             Button(onClick = resume, modifier = Modifier.fillMaxWidth()) {
-                Text("Resume")
+                Text(stringResource(R.string.resume))
             }
             Button(onClick = toHome, modifier = Modifier.fillMaxWidth()) {
-                Text("Quit")
+                Text(stringResource(R.string.quit))
             }
         }
     }
@@ -206,7 +212,7 @@ fun ModeChange(newMode: Modes, onContinue: () -> Unit) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("New mode:")
+            Text(stringResource(R.string.new_mode))
             Text(newMode.toString())
         }
     }
@@ -220,8 +226,10 @@ fun GameOver(score: Int, toHome: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Game over")
-        Text("Your score: $score")
+        Text(stringResource(R.string.game_over))
+        Text(String.format(Locale.UK,
+            stringResource(R.string.final_score),
+            score))
         Column(
             modifier = Modifier.width(IntrinsicSize.Max)
         ) {
@@ -229,13 +237,13 @@ fun GameOver(score: Int, toHome: () -> Unit) {
                 toHome,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Return to Menu")
+                Text(stringResource(R.string.to_menu))
             }
             Button(
                 { shareScore(context, score) },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Share score")
+                Text(stringResource(R.string.share_score))
             }
         }
     }
@@ -255,10 +263,13 @@ fun Question(state: GameState, pause: () -> Unit, onColourSelect: (Colours) -> U
                 IconButton(pause) {
                     Icon(
                         painter = painterResource(R.drawable.pause_24px),
-                        contentDescription = "Pause button"
+                        contentDescription = stringResource(R.string.pause)
                     )
                 }
-                Text("Score: " + state.score)
+                Text(String.format(
+                    Locale.UK,
+                    stringResource(R.string.show_score),
+                    state.score))
             }
             Column(
                 modifier = Modifier
