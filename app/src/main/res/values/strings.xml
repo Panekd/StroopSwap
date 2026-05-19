@@ -32,10 +32,12 @@
     <string name="resume">Resume</string>
     <string name="quit">Quit</string>
     <string name="to_menu">Return to Menu</string>
-    <string name="new_mode">New mode:</string>
+    <string name="new_mode">New mode</string>
     <string name="game_over">Game over</string>
     <string name="final_score">Your score: %d</string>
     <string name="try_again">Try again</string>
     <string name="share_score">Share score</string>
     <string name="share_score_text">I scored %d in Stroop Swap</string>
+    <string name="notif_title">Training reminder</string>
+    <string name="notif_desc">Hey! You need to keep those skills sharp. Come play a bit of Stroop Swap!</string>
 </resources>

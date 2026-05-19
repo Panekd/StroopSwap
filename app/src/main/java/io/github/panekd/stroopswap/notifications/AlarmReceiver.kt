@@ -3,6 +3,7 @@ package io.github.panekd.stroopswap.notifications
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
@@ -28,12 +29,24 @@ class AlarmReceiver() : BroadcastReceiver() {
 
         createNotificationChannel(context)
 
+        val launchIntent = context.packageManager
+            .getLaunchIntentForPackage(context.packageName)
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            launchIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.info_24px)
-            .setContentTitle("My notification")
-            .setContentText("Much longer text that cannot fit one line...")
+            .setContentTitle(context.resources.getString(R.string.notif_title))
+            .setContentText(context.resources.getString(R.string.notif_desc))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setCategory(CATEGORY_REMINDER)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
 
         if (
             ActivityCompat.checkSelfPermission(

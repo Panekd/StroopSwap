@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
@@ -180,30 +181,45 @@ fun Mode(mode: Modes) {
 
     Text(
         text = text,
-        fontSize = 25.sp
+        fontSize = 30.sp,
+        textAlign = TextAlign.Center
     )
 }
 
 @Composable
 fun PauseMenu(score: Int, resume: () -> Unit, onQuit: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(
+            space = 16.dp,
+            alignment = Alignment.CenterVertically
+        ),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(stringResource(R.string.paused))
+        Text(stringResource(R.string.paused), 
+            fontSize = 60.sp,
+            lineHeight = 65.sp,
+            textAlign = TextAlign.Center)
         Text(String.format(
-            Locale.UK,
-            stringResource(R.string.show_score),
-            score))
+                Locale.UK,
+                stringResource(R.string.show_score),
+                score), 
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center)
         Column(
-            modifier = Modifier.width(IntrinsicSize.Max)
+            modifier = Modifier.width(IntrinsicSize.Max),
+            verticalArrangement = Arrangement.spacedBy(
+                space = 16.dp,
+                alignment = Alignment.CenterVertically
+            )
         ) {
             Button(onClick = resume, modifier = Modifier.fillMaxWidth()) {
-                Text(stringResource(R.string.resume))
+                Text(stringResource(R.string.resume), fontSize = 32.sp)
             }
             Button(onClick = onQuit, modifier = Modifier.fillMaxWidth()) {
-                Text(stringResource(R.string.quit))
+                Text(stringResource(R.string.quit), fontSize = 32.sp)
             }
         }
     }
@@ -214,14 +230,25 @@ fun ModeChange(newMode: Modes, onContinue: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .clickable { onContinue() },
+            .clickable { onContinue() }
+            .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(
+            verticalArrangement = Arrangement.spacedBy(
+                space = 16.dp,
+                alignment = Alignment.CenterVertically
+            ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(stringResource(R.string.new_mode))
-            Text(newMode.toString())
+            Text(stringResource(R.string.new_mode), 
+                fontSize = 60.sp,
+                lineHeight = 65.sp,
+                textAlign = TextAlign.Center)
+            Text(newMode.toString(), 
+                fontSize = 60.sp,
+                lineHeight = 65.sp,
+                textAlign = TextAlign.Center)
         }
     }
 }
@@ -230,34 +257,54 @@ fun ModeChange(newMode: Modes, onContinue: () -> Unit) {
 fun GameOver(score: Int, tryAgain: () -> Unit, onQuit: () -> Unit) {
     val context = LocalContext.current
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(
+            space = 16.dp,
+            alignment = Alignment.CenterVertically
+        ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(stringResource(R.string.game_over))
+        Text(stringResource(R.string.game_over), 
+            fontSize = 60.sp,
+            lineHeight = 65.sp,
+            textAlign = TextAlign.Center)
         Text(String.format(Locale.UK,
-            stringResource(R.string.final_score),
-            score))
+                stringResource(R.string.final_score),
+                score), 
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center)
         Column(
-            modifier = Modifier.width(IntrinsicSize.Max)
+            modifier = Modifier.width(IntrinsicSize.Max),
+            verticalArrangement = Arrangement.spacedBy(
+                space = 16.dp,
+                alignment = Alignment.CenterVertically
+            )
         ) {
             Button(
                 tryAgain,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(stringResource(R.string.try_again))
+                Text(stringResource(R.string.try_again), 
+                    fontSize = 32.sp,
+                    textAlign = TextAlign.Center)
             }
             Button(
                 onQuit,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(stringResource(R.string.to_menu))
+                Text(stringResource(R.string.to_menu), 
+                    fontSize = 32.sp,
+                    textAlign = TextAlign.Center)
             }
             Button(
                 { shareScore(context, score) },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(stringResource(R.string.share_score))
+                Text(stringResource(R.string.share_score), 
+                    fontSize = 32.sp,
+                    textAlign = TextAlign.Center)
             }
         }
     }
@@ -281,9 +328,10 @@ fun Question(state: GameState, pause: () -> Unit, onColourSelect: (Colours) -> U
                     )
                 }
                 Text(String.format(
-                    Locale.UK,
-                    stringResource(R.string.show_score),
-                    state.score))
+                        Locale.UK,
+                        stringResource(R.string.show_score),
+                        state.score),
+                    fontSize = 20.sp)
             }
             Column(
                 modifier = Modifier

@@ -4,10 +4,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -16,8 +17,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.panekd.stroopswap.R
 import java.util.Locale
 
@@ -49,16 +55,28 @@ fun HomeScreen(toSettings: () -> Unit, toInfo: () -> Unit, toGame: () -> Unit, s
         }
     ) {innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(0.dp, 80.dp, 0.dp, 0.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(stringResource(R.string.app_name))
-            Button(onClick = { toGame() }) {
-                Text(stringResource(R.string.play))
+            Text(stringResource(R.string.app_name),
+                fontSize = 80.sp,
+                lineHeight = 80.sp,
+                textAlign = TextAlign.Center
+            )
+            IconButton(onClick = toGame,
+                modifier = Modifier.size(120.dp)) {
+                Icon(Icons.Filled.PlayArrow,
+                    "Play",
+                    tint = Color(0xff00e000),
+                    modifier = Modifier.size(100.dp))
             }
             Text(String.format(
-                Locale.UK,
-                stringResource(R.string.high_score),
-                highScore.value?.score?: 0))
+                    Locale.UK,
+                    stringResource(R.string.high_score),
+                    highScore.value?.score?: 0),
+                fontSize = 20.sp)
         }
     }
 }

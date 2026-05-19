@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -40,6 +41,7 @@ import java.util.Locale
 import io.github.panekd.stroopswap.data.Settings
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
@@ -152,6 +154,9 @@ fun RemindersSetting(model: SettingsViewModel, settings: Settings) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Description(stringResource(R.string.reminders_at))
+                Spacer(
+                    modifier = Modifier.size(10.dp)
+                )
                 Button(onClick = {showTimePicker = true}) {
                     Text(String.format(
                         Locale.UK,
@@ -205,7 +210,8 @@ fun TimePickerDialog(
 fun Heading(text: String) {
     Text(
         text = text,
-        fontSize = 20.sp
+        fontSize = 20.sp,
+        modifier = Modifier.padding(10.dp)
     )
 }
 
