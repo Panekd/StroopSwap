@@ -66,7 +66,7 @@ enum class Colours (val color: Color) {
 }
 
 @Composable
-fun GameScreen(toHome: () -> Unit) {
+fun GameScreen(toHome: () -> Unit, scoreVM: ScoreViewModel) {
     val viewModel : GameViewModel = viewModel()
     val state by viewModel.state.collectAsState()
 
@@ -85,6 +85,11 @@ fun GameScreen(toHome: () -> Unit) {
         }
     }
 
+    fun onQuit() {
+        scoreVM.add(state.score)
+        toHome()
+    }
+
     Surface {
         Box (
             modifier = Modifier
@@ -92,7 +97,7 @@ fun GameScreen(toHome: () -> Unit) {
                 .windowInsetsPadding(WindowInsets.safeDrawing)
         ) {
             if (state.paused) {
-                PauseMenu(state.score, { viewModel.resume() }, toHome)
+                PauseMenu(state.score, { viewModel.resume() }, { onQuit() })
             } else {
                 when (state.screen) {
                     GameScreenState.Question -> Question(
@@ -106,7 +111,7 @@ fun GameScreen(toHome: () -> Unit) {
                     GameScreenState.GameOver ->
                         GameOver(state.score,
                             { viewModel.restart() },
-                            toHome)
+                            { onQuit() })
                 }
             }
         }
@@ -180,7 +185,7 @@ fun Mode(mode: Modes) {
 }
 
 @Composable
-fun PauseMenu(score: Int, resume: () -> Unit, toHome: () -> Unit) {
+fun PauseMenu(score: Int, resume: () -> Unit, onQuit: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -197,7 +202,7 @@ fun PauseMenu(score: Int, resume: () -> Unit, toHome: () -> Unit) {
             Button(onClick = resume, modifier = Modifier.fillMaxWidth()) {
                 Text(stringResource(R.string.resume))
             }
-            Button(onClick = toHome, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = onQuit, modifier = Modifier.fillMaxWidth()) {
                 Text(stringResource(R.string.quit))
             }
         }
@@ -222,7 +227,7 @@ fun ModeChange(newMode: Modes, onContinue: () -> Unit) {
 }
 
 @Composable
-fun GameOver(score: Int, tryAgain: () -> Unit, toHome: () -> Unit) {
+fun GameOver(score: Int, tryAgain: () -> Unit, onQuit: () -> Unit) {
     val context = LocalContext.current
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -243,7 +248,7 @@ fun GameOver(score: Int, tryAgain: () -> Unit, toHome: () -> Unit) {
                 Text(stringResource(R.string.try_again))
             }
             Button(
-                toHome,
+                onQuit,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.to_menu))

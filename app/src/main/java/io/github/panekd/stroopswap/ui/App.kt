@@ -2,6 +2,7 @@ package io.github.panekd.stroopswap.ui
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -21,6 +22,8 @@ private object Game
 fun App() {
     val navController = rememberNavController()
 
+    val scoreVM : ScoreViewModel = viewModel()
+
     NavHost(
         navController = navController,
         startDestination = Home
@@ -29,7 +32,8 @@ fun App() {
             HomeScreen(
                 toSettings = { navController.navigate(route = Settings) },
                 toInfo = { navController.navigate(route = Info) },
-                toGame = { navController.navigate(route = Game) }
+                toGame = { navController.navigate(route = Game) },
+                scoreVM
             )
         }
         composable<Settings> {
@@ -44,7 +48,8 @@ fun App() {
         }
         composable<Game> {
             GameScreen(
-                toHome = { navController.navigate(route = Home) }
+                toHome = { navController.navigate(route = Home) },
+                scoreVM
             )
         }
     }
