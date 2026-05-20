@@ -2,6 +2,7 @@ package io.github.panekd.stroopswap.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
@@ -57,7 +58,8 @@ fun HomeScreen(toSettings: () -> Unit, toInfo: () -> Unit, toGame: () -> Unit, s
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(0.dp, 80.dp, 0.dp, 0.dp),
+                .padding(0.dp, 20.dp, 0.dp, 0.dp)
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(stringResource(R.string.app_name),

@@ -199,7 +199,7 @@ fun PauseMenu(score: Int, resume: () -> Unit, onQuit: () -> Unit) {
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(
-            space = 16.dp,
+            space = 10.dp,
             alignment = Alignment.CenterVertically
         ),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -217,15 +217,15 @@ fun PauseMenu(score: Int, resume: () -> Unit, onQuit: () -> Unit) {
         Column(
             modifier = Modifier.width(IntrinsicSize.Max),
             verticalArrangement = Arrangement.spacedBy(
-                space = 16.dp,
+                space = 10.dp,
                 alignment = Alignment.CenterVertically
             )
         ) {
             Button(onClick = resume, modifier = Modifier.fillMaxWidth()) {
-                Text(stringResource(R.string.resume), fontSize = 32.sp)
+                Text(stringResource(R.string.resume), fontSize = 25.sp)
             }
             Button(onClick = onQuit, modifier = Modifier.fillMaxWidth()) {
-                Text(stringResource(R.string.quit), fontSize = 32.sp)
+                Text(stringResource(R.string.quit), fontSize = 25.sp)
             }
         }
     }
@@ -271,7 +271,7 @@ fun GameOver(score: Int, highScore: Int, tryAgain: () -> Unit, onQuit: () -> Uni
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(
-            space = 16.dp,
+            space = 10.dp,
             alignment = Alignment.CenterVertically
         ),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -303,7 +303,7 @@ fun GameOver(score: Int, highScore: Int, tryAgain: () -> Unit, onQuit: () -> Uni
         Column(
             modifier = Modifier.width(IntrinsicSize.Max),
             verticalArrangement = Arrangement.spacedBy(
-                space = 16.dp,
+                space = 10.dp,
                 alignment = Alignment.CenterVertically
             )
         ) {
@@ -312,7 +312,7 @@ fun GameOver(score: Int, highScore: Int, tryAgain: () -> Unit, onQuit: () -> Uni
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.try_again), 
-                    fontSize = 32.sp,
+                    fontSize = 25.sp,
                     textAlign = TextAlign.Center)
             }
             Button(
@@ -320,7 +320,7 @@ fun GameOver(score: Int, highScore: Int, tryAgain: () -> Unit, onQuit: () -> Uni
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.to_menu), 
-                    fontSize = 32.sp,
+                    fontSize = 25.sp,
                     textAlign = TextAlign.Center)
             }
             Button(
@@ -328,7 +328,7 @@ fun GameOver(score: Int, highScore: Int, tryAgain: () -> Unit, onQuit: () -> Uni
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.share_score), 
-                    fontSize = 32.sp,
+                    fontSize = 25.sp,
                     textAlign = TextAlign.Center)
             }
         }
