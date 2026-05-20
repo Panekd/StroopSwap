@@ -249,6 +249,10 @@ fun ModeChange(newMode: Modes, onContinue: () -> Unit) {
                 fontSize = 60.sp,
                 lineHeight = 65.sp,
                 textAlign = TextAlign.Center)
+            Text(stringResource(R.string.tap_to_cont),
+                fontSize = 20.sp,
+                lineHeight = 22.sp,
+                textAlign = TextAlign.Center)
         }
     }
 }

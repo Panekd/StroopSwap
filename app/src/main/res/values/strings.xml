@@ -33,6 +33,7 @@
     <string name="quit">Quit</string>
     <string name="to_menu">Return to Menu</string>
     <string name="new_mode">New mode</string>
+    <string name="tap_to_cont">Tap to continue</string>
     <string name="game_over">Game over</string>
     <string name="final_score">Your score: %d</string>
     <string name="try_again">Try again</string>
