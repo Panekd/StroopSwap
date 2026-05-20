@@ -71,6 +71,8 @@ fun GameScreen(toHome: () -> Unit, scoreVM: ScoreViewModel) {
     val viewModel : GameViewModel = viewModel()
     val state by viewModel.state.collectAsState()
 
+    val highScore = scoreVM.highScore.observeAsState()
+
     // Pause when exit app
     DisposableEffect(Unit) {
         val observer = LifecycleEventObserver { _, event ->
@@ -111,6 +113,7 @@ fun GameScreen(toHome: () -> Unit, scoreVM: ScoreViewModel) {
 
                     GameScreenState.GameOver ->
                         GameOver(state.score,
+                            highScore.value?.score?:0,
                             { viewModel.restart() },
                             { onQuit() })
                 }
@@ -258,7 +261,7 @@ fun ModeChange(newMode: Modes, onContinue: () -> Unit) {
 }
 
 @Composable
-fun GameOver(score: Int, tryAgain: () -> Unit, onQuit: () -> Unit) {
+fun GameOver(score: Int, highScore: Int, tryAgain: () -> Unit, onQuit: () -> Unit) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -278,7 +281,22 @@ fun GameOver(score: Int, tryAgain: () -> Unit, onQuit: () -> Unit) {
                 stringResource(R.string.final_score),
                 score), 
             fontSize = 20.sp,
+            lineHeight = 22.sp,
             textAlign = TextAlign.Center)
+        if (score > highScore) {
+            Text(stringResource(R.string.new_high_score),
+                fontSize = 20.sp,
+                lineHeight = 22.sp,
+                textAlign = TextAlign.Center)
+        } else {
+            Text(String.format(
+                    Locale.UK,
+                    stringResource(R.string.high_score),
+                    highScore),
+                fontSize = 20.sp,
+                lineHeight = 22.sp,
+                textAlign = TextAlign.Center)
+        }
         Column(
             modifier = Modifier.width(IntrinsicSize.Max),
             verticalArrangement = Arrangement.spacedBy(

@@ -36,6 +36,7 @@
     <string name="tap_to_cont">Tap to continue</string>
     <string name="game_over">Game over</string>
     <string name="final_score">Your score: %d</string>
+    <string name="new_high_score">New high score!</string>
     <string name="try_again">Try again</string>
     <string name="share_score">Share score</string>
     <string name="share_score_text">I scored %d in Stroop Swap</string>
