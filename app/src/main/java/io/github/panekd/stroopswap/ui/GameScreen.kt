@@ -1,11 +1,13 @@
 package io.github.panekd.stroopswap.ui
 
 import android.content.res.Configuration
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -122,6 +124,7 @@ fun GameScreen(toHome: () -> Unit, scoreVM: ScoreViewModel) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun ColourButtons(modifier: Modifier = Modifier, onClick: (Colours) -> Unit) {
     val settingsViewModel : SettingsViewModel = viewModel()
