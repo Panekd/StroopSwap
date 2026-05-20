@@ -9,7 +9,7 @@ import android.net.Uri
 class ScoreProvider : ContentProvider() {
 
     companion object {
-        const val AUTHORITY = "io.github.panekd.stroopswap.data.provider"
+        const val AUTHORITY = "io.github.panekd.stroopswap.data.scores"
 
         private const val SCORES = 1
         private const val SCORE_TIME = 2

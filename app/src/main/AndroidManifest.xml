@@ -16,7 +16,7 @@
         android:theme="@style/Theme.StroopSwap">
         <provider
             android:name=".data.ScoreProvider"
-            android:authorities="io.github.panekd.stroopswap.data.provider"
+            android:authorities="io.github.panekd.stroopswap.data.scores"
             android:exported="true"
             android:readPermission="io.github.panekd.stroopswap.READ_SCORES" />
         <receiver
